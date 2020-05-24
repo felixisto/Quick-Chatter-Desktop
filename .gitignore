@@ -1,0 +1,5 @@
+/build/
+/dist/
+/target/
+logs.txt
+logs-previous.txt
