@@ -34,6 +34,10 @@ public class ChatFrame extends javax.swing.JFrame implements BaseView.Whole {
         chatTextArea.setText(text);
     }
     
+    public void addChatLine(@NotNull String text) {
+        chatTextArea.setText(chatTextArea.getText() + "\n" + text);
+    }
+    
     public void setChatField(@NotNull String text) {
         chatField.setText(text);
     }

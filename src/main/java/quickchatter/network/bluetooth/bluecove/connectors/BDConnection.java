@@ -98,6 +98,8 @@ public class BDConnection {
         UUID[] uuidSet = new UUID[1];
         uuidSet[0] = _uuid;
         
+        final BDConnection self = this;
+        
         DiscoveryListener listener = new DiscoveryListener() {
             @Override
             public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {

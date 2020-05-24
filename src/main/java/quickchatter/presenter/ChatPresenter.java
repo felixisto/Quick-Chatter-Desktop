@@ -32,15 +32,15 @@ import quickchatter.utilities.Timer;
 public class ChatPresenter implements BasePresenter.Chat, LooperClient, TransmitterListener, SendFilePerformerDelegate {
     private @NotNull BasePresenterDelegate.Chat _delegate;
     
-    private @NotNull BEClient _client;
-    private @NotNull BETransmitter.ReaderWriter _transmitter;
-    private @NotNull BETransmitter.Service _transmitterService;
+    private @NotNull final BEClient _client;
+    private @NotNull final BETransmitter.ReaderWriter _transmitter;
+    private @NotNull final BETransmitter.Service _transmitterService;
     
-    private @NotNull UIChat _chat;
+    private @NotNull final UIChat _chat;
     
-    private @NotNull Timer _updateTimer = new Timer(TimeValue.buildSeconds(0.5));
+    private @NotNull final Timer _updateTimer = new Timer(TimeValue.buildSeconds(0.5));
     
-    private final @NotNull SendFilePerformer _sendFilePerformer;
+    private @NotNull final SendFilePerformer _sendFilePerformer;
     
     private boolean _timeoutWarningSent = false;
     private boolean _timeoutSent = false;
@@ -89,16 +89,23 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
     
     @Override
     public void stop() {
-        _delegate = null;
+        final ChatPresenter self = this;
+        
+        LooperService.getShared().performOnAWT(new SimpleCallback() {
+            @Override
+            public void perform() {
+                _delegate = null;
 
-        LooperService.getShared().unsubscribe(this);
+                LooperService.getShared().unsubscribe(self);
 
-        _transmitterService.unsubscribe(this);
+                _transmitterService.unsubscribe(self);
 
-        _sendFilePerformer.stop();
+                _sendFilePerformer.stop();
 
-        _transmitter.stop();
-        _transmitterService.stop();
+                _transmitter.stop();
+                _transmitterService.stop();
+            }
+        });
     }
     
     @Override
@@ -343,7 +350,7 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
         
     }
     
-    // # Private
+    // # Internals
     
     private void readAllNewMessages() {
         _transmitterService.readAllNewMessages();
@@ -354,41 +361,73 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
 
         if (pingDelay.inMS() > BDConstants.CONNECTION_TIMEOUT_WARNING.inMS()) {
             if (pingDelay.inMS() > BDConstants.CONNECTION_TIMEOUT.inMS()) {
-                if (!_timeoutSent) {
-                    _timeoutSent = true;
-
-                    if (_delegate != null) {
-                        _delegate.onConnectionTimeout(false);
-                    }
-                }
+                handleConnectionTimeout();
             } else {
-                if (!_timeoutWarningSent) {
-                    _timeoutWarningSent = true;
-
-                    if (_delegate != null) {
-                        _delegate.onConnectionTimeout(true);
-                    }
-                }
+                handleConnectionTimeoutWarning();
             }
         } else {
             if (_timeoutWarningSent || _timeoutSent) {
-                if (_delegate != null) {
-                    _delegate.onConnectionRestored();
-                }
+                performOnDelegate(new Callback<BasePresenterDelegate.Chat>() {
+                    @Override
+                    public void perform(BasePresenterDelegate.Chat delegate) {
+                        delegate.onConnectionRestored();
+                    }
+                });
             }
-
+            
             _timeoutWarningSent = false;
             _timeoutSent = false;
         }
     }
-
-    private void updateDelegateChat(final @NotNull String message) {
+    
+    private void handleConnectionTimeout() {
+        if (!_timeoutSent) {
+            Logger.warning(this, "Connection timeout detected!");
+            
+            _timeoutSent = true;
+                    
+            performOnDelegate(new Callback<BasePresenterDelegate.Chat>() {
+                @Override
+                public void perform(BasePresenterDelegate.Chat delegate) {
+                    delegate.onConnectionTimeout(false);
+                }
+            });
+        }
+    }
+    
+    private void handleConnectionTimeoutWarning() {
+        if (!_timeoutWarningSent) {
+            Logger.warning(this, "Connection timeout - warning.");
+            
+            _timeoutWarningSent = true;
+                    
+            performOnDelegate(new Callback<BasePresenterDelegate.Chat>() {
+                @Override
+                public void perform(BasePresenterDelegate.Chat delegate) {
+                    delegate.onConnectionTimeout(false);
+                }
+            });
+        }
+    }
+    
+    private void performOnDelegate(@NotNull Callback<BasePresenterDelegate.Chat> callback) {
         LooperService.getShared().performOnAWT(new SimpleCallback() {
             @Override
             public void perform() {
-                if (_delegate != null) {
-                    _delegate.updateChat(message, _chat.getLog());
+                if (_delegate == null) {
+                    return;
                 }
+                
+                callback.perform(_delegate);
+            }
+        });
+    }
+    
+    private void updateDelegateChat(@NotNull final String message) {
+        performOnDelegate(new Callback<BasePresenterDelegate.Chat>() {
+            @Override
+            public void perform(BasePresenterDelegate.Chat delegate) {
+                delegate.updateChat(message, _chat.getLog());
             }
         });
     }
