@@ -6,6 +6,7 @@
 package quickchatter.network.bluetooth.bluecove.connectors;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryListener;
 import javax.bluetooth.LocalDevice;
@@ -28,14 +29,18 @@ import quickchatter.utilities.Logger;
 public class BDConnection {
     public static final int RETRY_COUNT = 10;
     
+    private final Object lock = new Object();
+    
     private final @NotNull BDAdapter _adapter;
     private final @NotNull BEClient _client;
     private final @NotNull UUID _uuid;
     
     private final int _retryCount;
-    private int _currentTryCount;
+    private @NotNull final AtomicInteger _currentTryCount = new AtomicInteger(0);
     
     private final @NotNull AtomicBoolean _isActive = new AtomicBoolean(false);
+    private final @NotNull AtomicBoolean _foundService = new AtomicBoolean(false);
+    private int _currentSearchID;
     
     public BDConnection(@NotNull BDAdapter adapter, @NotNull BEClient client, @NotNull UUID uuid, int retryCount) {
         _adapter = adapter;
@@ -49,20 +54,44 @@ public class BDConnection {
     }
     
     public void start(@NotNull Callback<BESocket> success, @NotNull Callback<Exception> failure) {
+        if (!_adapter.isAvailable()) {
+            failure.perform(new Exception("Bluetooth not available"));
+            return;
+        }
+        
         if (_isActive.getAndSet(true)) {
             failure.perform(new Exception("Already started"));
             return;
         }
+        
+        _currentTryCount.set(_retryCount);
+        
+        _foundService.set(false);
         
         Logger.message(this, "Trying to establish a connection with client device");
         
         connect(success, failure);
     }
     
+    public void stop() {
+        if (!_adapter.isAvailable()) {
+            return;
+        }
+        
+        synchronized (lock) {
+            if (!_isActive.getAndSet(false)) {
+                return;
+            }
+            
+            LocalDevice localDevice = _adapter.getAdapter();
+            localDevice.getDiscoveryAgent().cancelServiceSearch(_currentSearchID);
+            
+            _currentSearchID = -1;
+        }
+    }
+    
     private void connect(@NotNull Callback<BESocket> success, @NotNull Callback<Exception> failure) {
-       _currentTryCount = _retryCount;
-       
-       _currentTryCount -= 1;
+       _currentTryCount.decrementAndGet();
         
        tryConnect(success, new Callback<Exception>() {
            @Override
@@ -70,9 +99,13 @@ public class BDConnection {
                Logger.warning(this, "Failed to establish a connection, error: " + argument);
                
                // Retry
-               if (_currentTryCount > 0) {
+               if (_currentTryCount.get() > 0) {
                    Logger.message(this, "Retrying establish connection with client device");
                    connect(success, failure);
+               } else {
+                   Logger.message(this, "Retry exausted, stopping and finishing with error");
+                   stop();
+                   failure.perform(argument);
                }
            }
        });
@@ -108,13 +141,17 @@ public class BDConnection {
 
             @Override
             public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {
-                if (!_isActive.get()) {
-                    return;
-                }
-                
-                if (servRecord == null || servRecord.length == 0) {
-                    failure.perform(new Exception("Unsupported client device"));
-                    return;
+                synchronized (lock) {
+                    if (!_isActive.get()) {
+                        return;
+                    }
+                    
+                    if (servRecord == null || servRecord.length == 0) {
+                        failure.perform(new Exception("Unsupported client device"));
+                        return;
+                    }
+                    
+                    _foundService.set(true);
                 }
                 
                 String url = servRecord[0].getConnectionURL(ServiceRecord.AUTHENTICATE_ENCRYPT, false);
@@ -124,7 +161,15 @@ public class BDConnection {
 
             @Override
             public void serviceSearchCompleted(int transID, int respCode) {
-                _isActive.set(false);
+                synchronized (lock) {
+                    _isActive.set(false);
+                    
+                    if (_foundService.get()) {
+                        return;
+                    }
+                    
+                    endConnectionDueToUnsupportedServices(failure);
+                }
             }
 
             @Override
@@ -133,10 +178,12 @@ public class BDConnection {
             }
         };
         
-        try {
-            localDevice.getDiscoveryAgent().searchServices(null, uuidSet, clientDevice.asRemoteDevice(), listener);
-        } catch (Exception e) {
-            failure.perform(e);
+        synchronized (lock) {
+            try {
+                _currentSearchID = localDevice.getDiscoveryAgent().searchServices(null, uuidSet, clientDevice.asRemoteDevice(), listener);
+            } catch (Exception e) {
+                failure.perform(e);
+            }
         }
     }
     
@@ -154,5 +201,9 @@ public class BDConnection {
         } catch (Exception e) {
             failure.perform(e);
         }
+    }
+    
+    private void endConnectionDueToUnsupportedServices(@NotNull Callback<Exception> failure) {
+        failure.perform(new Exception("Target device disconnected or does not support the required services"));
     }
 }
