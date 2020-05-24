@@ -11,7 +11,7 @@ import quickchatter.mvp.MVP;
 import quickchatter.network.bluetooth.basic.BEClient;
 import quickchatter.network.bluetooth.basic.BEConnector;
 import quickchatter.network.bluetooth.basic.BESocket;
-import quickchatter.network.bluetooth.bluecove.transmission.BDTransmitter;
+import quickchatter.network.bluetooth.bluecove.transmission.BCTransmitter;
 import quickchatter.presenter.worker.ConnectingPresenter;
 import quickchatter.utilities.Callback;
 import quickchatter.utilities.Errors;
@@ -24,7 +24,7 @@ public class ConnectingServerPresenter implements BasePresenter.Connecting {
     
     private final @NotNull BEConnector.Server _connector;
     private final @NotNull BEClient _client;
-    private @Nullable BDTransmitter _transmitter;
+    private @Nullable BCTransmitter _transmitter;
     
     public ConnectingServerPresenter(@NotNull BEClient client, @NotNull BEConnector.Server connector) {
         _connector = connector;
@@ -51,7 +51,7 @@ public class ConnectingServerPresenter implements BasePresenter.Connecting {
             public void perform(BESocket argument) {
                 Logger.message(this, "SUCCESS!");
 
-                BDTransmitter transmitter = startServer(argument);
+                BCTransmitter transmitter = startServer(argument);
 
                 delegate.updateClientInfo("Paired!");
                 delegate.navigateToChatScreen(_client, transmitter, transmitter);
@@ -98,7 +98,7 @@ public class ConnectingServerPresenter implements BasePresenter.Connecting {
         }
     }
     
-    private @NotNull BDTransmitter startServer(@NotNull BESocket socket) {
+    private @NotNull BCTransmitter startServer(@NotNull BESocket socket) {
         stopAndResetTransmitter();
 
         try {

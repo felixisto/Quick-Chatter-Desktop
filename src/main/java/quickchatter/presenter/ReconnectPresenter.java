@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import quickchatter.mvp.MVP;
 import quickchatter.network.bluetooth.basic.BEClient;
 import quickchatter.network.bluetooth.basic.BEPairing;
-import quickchatter.network.bluetooth.bluecove.discovery.BDPairing;
+import quickchatter.network.bluetooth.bluecove.discovery.BCPairing;
 import quickchatter.ui.listdata.BEClientsListData;
 import quickchatter.utilities.Errors;
 import quickchatter.utilities.Logger;
@@ -19,12 +19,12 @@ import quickchatter.utilities.LooperService;
 import quickchatter.utilities.SimpleCallback;
 
 public class ReconnectPresenter implements BasePresenter.Reconnect {
-    private @NotNull BDPairing _pairing;
+    private @NotNull BCPairing _pairing;
     private @NotNull BasePresenterDelegate.Reconnect _delegate;
     
     private @NotNull ArrayList<BEClient> _pairedClients = new ArrayList<>();
     
-    public ReconnectPresenter(@NotNull BDPairing pairing) {
+    public ReconnectPresenter(@NotNull BCPairing pairing) {
         _pairing = pairing;
     }
 

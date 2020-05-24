@@ -14,13 +14,13 @@ import quickchatter.filesystem.worker.loader.FileSystemLoaderLocal;
 import quickchatter.network.bluetooth.basic.BEClient;
 import quickchatter.network.bluetooth.basic.BEConnector;
 import quickchatter.network.bluetooth.basic.BETransmitter;
-import quickchatter.network.bluetooth.bluecove.BDAdapter;
-import quickchatter.network.bluetooth.bluecove.connectors.BDClientConnector;
-import quickchatter.network.bluetooth.bluecove.connectors.BDServerConnector;
-import quickchatter.network.bluetooth.bluecove.discovery.BDClientScanner;
-import quickchatter.network.bluetooth.bluecove.discovery.BDDiscovery;
-import quickchatter.network.bluetooth.bluecove.discovery.BDEmitter;
-import quickchatter.network.bluetooth.bluecove.discovery.BDPairing;
+import quickchatter.network.bluetooth.bluecove.BCAdapter;
+import quickchatter.network.bluetooth.bluecove.connectors.BCClientConnector;
+import quickchatter.network.bluetooth.bluecove.connectors.BCServerConnector;
+import quickchatter.network.bluetooth.bluecove.discovery.BCClientScanner;
+import quickchatter.network.bluetooth.bluecove.discovery.BCDiscovery;
+import quickchatter.network.bluetooth.bluecove.discovery.BCEmitter;
+import quickchatter.network.bluetooth.bluecove.discovery.BCPairing;
 import quickchatter.presenter.ChatPresenter;
 import quickchatter.presenter.ConnectMenuPresenter;
 import quickchatter.presenter.ConnectPresenter;
@@ -53,10 +53,10 @@ import quickchatter.utilities.TimeValue;
 public class PrimaryRouter implements Router.Primary, Router.System {
     private final @NotNull AtomicReference<State> _state = new AtomicReference<>();
 
-    private final @NotNull BDAdapter _adapter;
+    private final @NotNull BCAdapter _adapter;
 
-    private final @NotNull BDClientScanner _scanner;
-    private final @NotNull BDEmitter _emitter;
+    private final @NotNull BCClientScanner _scanner;
+    private final @NotNull BCEmitter _emitter;
 
     private final @NotNull SimpleFileSystem _fileSystem = new SimpleFileSystem();
     private final @NotNull FileSystemLoaderLocal _fileSystemLoader;
@@ -68,9 +68,9 @@ public class PrimaryRouter implements Router.Primary, Router.System {
 
     public PrimaryRouter() {
         _state.set(State.connectMenu);
-        _adapter = BDAdapter.getShared();
-        _scanner = new BDClientScanner(new BDDiscovery(_adapter));
-        _emitter = new BDEmitter(_adapter, BDEmitter.DEFAULT_EMIT_TIME);
+        _adapter = BCAdapter.getShared();
+        _scanner = new BCClientScanner(new BCDiscovery(_adapter));
+        _emitter = new BCEmitter(_adapter, BCEmitter.DEFAULT_EMIT_TIME);
         _fileSystemLoader = new FileSystemLoaderLocal(_fileSystem);
         _viewBuilder = new ViewBuilder(this);
 
@@ -325,7 +325,7 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             public void perform() {
                 destroyCurrentContentViewController();
                 
-                BDPairing pairing = new BDPairing(_adapter);
+                BCPairing pairing = new BCPairing(_adapter);
                 ReconnectPresenter presenter = new ReconnectPresenter(pairing);
                 ReconnectViewController vc = new ReconnectViewController(presenter, self);
                 
@@ -348,7 +348,7 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             public void perform() {
                 destroyCurrentContentViewController();
                 
-                BEConnector.Server connector = new BDServerConnector("QuickChat", _adapter);
+                BEConnector.Server connector = new BCServerConnector("QuickChat", _adapter);
                 ConnectingServerPresenter presenter = new ConnectingServerPresenter(client, connector);
                 ConnectingServerViewController vc = new ConnectingServerViewController(presenter, self);
                 
@@ -371,7 +371,7 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             public void perform() {
                 destroyCurrentContentViewController();
                 
-                BEConnector.Client connector = new BDClientConnector(client, _adapter, 10, TimeValue.buildSeconds(1));
+                BEConnector.Client connector = new BCClientConnector(client, _adapter, 10, TimeValue.buildSeconds(1));
                 ConnectingClientPresenter presenter = new ConnectingClientPresenter(client, connector);
                 ConnectingClientViewController vc = new ConnectingClientViewController(presenter, self);
                 

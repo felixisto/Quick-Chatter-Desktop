@@ -14,8 +14,8 @@ import quickchatter.network.basic.TransmissionType;
 import quickchatter.network.basic.TransmitterListener;
 import quickchatter.network.bluetooth.basic.BEClient;
 import quickchatter.network.bluetooth.basic.BETransmitter;
-import quickchatter.network.bluetooth.bluecove.BDConstants;
-import quickchatter.network.bluetooth.bluecove.transmission.BDTransmissionMessage;
+import quickchatter.network.bluetooth.bluecove.BCConstants;
+import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionMessage;
 import quickchatter.presenter.worker.SendFilePerformer;
 import quickchatter.presenter.worker.SendFilePerformerDelegate;
 import quickchatter.ui.chat.UIChat;
@@ -117,10 +117,10 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
         Logger.message(this, "Send message '" + message + "'");
 
         try {
-            TransmissionType type = BDConstants.getShared().TYPE_CHAT;
+            TransmissionType type = BCConstants.getShared().TYPE_CHAT;
             byte[] bytes = message.getBytes();
 
-            _transmitter.sendMessage(new BDTransmissionMessage(type, bytes));
+            _transmitter.sendMessage(new BCTransmissionMessage(type, bytes));
 
             message = _chat.parseStringForSendMessage(bytes);
 
@@ -312,7 +312,7 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
 
     @Override
     public void onMessageReceived(TransmissionType type, TransmissionMessage message) {
-        if (!type.equals(BDConstants.getShared().TYPE_CHAT)) {
+        if (!type.equals(BCConstants.getShared().TYPE_CHAT)) {
             return;
         }
 
@@ -359,8 +359,8 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
     private void updatePingState() {
         TimeValue pingDelay = _transmitterService.getPingStatusChecker().timeElapsedSinceLastPing();
 
-        if (pingDelay.inMS() > BDConstants.CONNECTION_TIMEOUT_WARNING.inMS()) {
-            if (pingDelay.inMS() > BDConstants.CONNECTION_TIMEOUT.inMS()) {
+        if (pingDelay.inMS() > BCConstants.CONNECTION_TIMEOUT_WARNING.inMS()) {
+            if (pingDelay.inMS() > BCConstants.CONNECTION_TIMEOUT.inMS()) {
                 handleConnectionTimeout();
             } else {
                 handleConnectionTimeoutWarning();

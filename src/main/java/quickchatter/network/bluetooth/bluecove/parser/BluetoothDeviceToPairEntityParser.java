@@ -8,8 +8,8 @@ package quickchatter.network.bluetooth.bluecove.parser;
 import javax.bluetooth.RemoteDevice;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.network.bluetooth.basic.BEPairing;
-import quickchatter.network.bluetooth.bluecove.model.BDClient;
-import quickchatter.network.bluetooth.bluecove.model.BDClientDeviceInfo;
+import quickchatter.network.bluetooth.bluecove.model.BCClient;
+import quickchatter.network.bluetooth.bluecove.model.BCClientDeviceInfo;
 import quickchatter.utilities.Errors;
 import quickchatter.utilities.Parser;
 
@@ -28,6 +28,6 @@ public class BluetoothDeviceToPairEntityParser implements Parser<RemoteDevice, B
             Errors.throwInvalidArgument("Bluetooth device needs to have a non null name");
         }
 
-        return new BDClient(new BDClientDeviceInfo(data));
+        return new BCClient(new BCClientDeviceInfo(data));
     }
 }

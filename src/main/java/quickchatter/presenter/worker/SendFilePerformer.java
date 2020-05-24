@@ -19,9 +19,9 @@ import quickchatter.network.basic.TransmissionMessage;
 import quickchatter.network.basic.TransmissionType;
 import quickchatter.network.basic.Transmitter;
 import quickchatter.network.basic.TransmitterListener;
-import quickchatter.network.bluetooth.bluecove.BDConstants;
-import quickchatter.network.bluetooth.bluecove.segment.BDTransmissionMessageSegment;
-import quickchatter.network.bluetooth.bluecove.transmission.BDTransmissionMessage;
+import quickchatter.network.bluetooth.bluecove.BCConstants;
+import quickchatter.network.bluetooth.bluecove.segment.BCTransmissionMessageSegment;
+import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionMessage;
 import quickchatter.utilities.Callback;
 import quickchatter.utilities.DataSize;
 import quickchatter.utilities.Errors;
@@ -40,7 +40,7 @@ public class SendFilePerformer implements TransmitterListener {
 
     private @NotNull final Object lock = new Object();
 
-    private @NotNull BDConstants constants = BDConstants.getShared();
+    private @NotNull BCConstants constants = BCConstants.getShared();
 
     private @NotNull AtomicReference<State> _state = new AtomicReference<>(State.idle);
     private @NotNull AtomicReference<FilePath> _path = new AtomicReference<>();
@@ -286,33 +286,33 @@ public class SendFilePerformer implements TransmitterListener {
 
     // # Build message
 
-    private @NotNull BDTransmissionMessage buildCancelStatusMessage() {
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_CANCEL));
+    private @NotNull BCTransmissionMessage buildCancelStatusMessage() {
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_CANCEL));
     }
 
-    private @NotNull BDTransmissionMessage buildAcceptStatusMessage() {
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_ACCEPT));
+    private @NotNull BCTransmissionMessage buildAcceptStatusMessage() {
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_ACCEPT));
     }
 
-    private @NotNull BDTransmissionMessage buildDenyStatusMessage() {
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_DENY));
+    private @NotNull BCTransmissionMessage buildDenyStatusMessage() {
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_STATUS, charToByte(STATUS_DENY));
     }
 
-    private @NotNull BDTransmissionMessage buildSendAskMessage(@NotNull FilePath path) {
+    private @NotNull BCTransmissionMessage buildSendAskMessage(@NotNull FilePath path) {
         String name = path.getLastComponent();
         DataSize size = getSize(path);
 
         byte[] value = stringToBytes(name + " (" + size.toString() + ")");
 
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_ASK, value);
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_ASK, value);
     }
 
-    private @NotNull BDTransmissionMessage buildDataMessage(@NotNull FilePath path) {
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_DATA, getData(path));
+    private @NotNull BCTransmissionMessage buildDataMessage(@NotNull FilePath path) {
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_DATA, getData(path));
     }
 
-    private @NotNull BDTransmissionMessage buildFinalConfirmMessage() {
-        return new BDTransmissionMessage(constants.TYPE_SEND_FILE_FINAL_CONFIRM);
+    private @NotNull BCTransmissionMessage buildFinalConfirmMessage() {
+        return new BCTransmissionMessage(constants.TYPE_SEND_FILE_FINAL_CONFIRM);
     }
 
     // # Message validators
@@ -501,15 +501,15 @@ public class SendFilePerformer implements TransmitterListener {
     // # Other
 
     private @NotNull byte[] charToByte(char value) {
-        return BDTransmissionMessageSegment.stringToBytes(String.valueOf(value));
+        return BCTransmissionMessageSegment.stringToBytes(String.valueOf(value));
     }
 
     private @NotNull byte[] stringToBytes(@NotNull String value) {
-        return BDTransmissionMessageSegment.stringToBytes(value);
+        return BCTransmissionMessageSegment.stringToBytes(value);
     }
 
     private @NotNull String bytesToString(@NotNull byte[] data) {
-        return BDTransmissionMessageSegment.bytesToString(data);
+        return BCTransmissionMessageSegment.bytesToString(data);
     }
 
     private @NotNull DataSize getSize(@NotNull FilePath path) {
