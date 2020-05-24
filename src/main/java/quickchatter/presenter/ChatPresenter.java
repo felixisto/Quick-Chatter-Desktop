@@ -404,7 +404,7 @@ public class ChatPresenter implements BasePresenter.Chat, LooperClient, Transmit
             performOnDelegate(new Callback<BasePresenterDelegate.Chat>() {
                 @Override
                 public void perform(BasePresenterDelegate.Chat delegate) {
-                    delegate.onConnectionTimeout(false);
+                    delegate.onConnectionTimeout(true);
                 }
             });
         }

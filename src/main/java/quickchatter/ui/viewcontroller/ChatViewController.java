@@ -15,8 +15,10 @@ import quickchatter.ui.view.ChatFrame;
 import quickchatter.utilities.AlertWindows;
 import quickchatter.utilities.Callback;
 import quickchatter.utilities.Logger;
+import quickchatter.utilities.LooperService;
 import quickchatter.utilities.Path;
 import quickchatter.utilities.SimpleCallback;
+import quickchatter.utilities.TimeValue;
 
 public class ChatViewController implements BaseViewController.Chat {
     private final @NotNull BasePresenter.Chat _presenter;
@@ -157,7 +159,19 @@ public class ChatViewController implements BaseViewController.Chat {
 
     @Override
     public void onConnectionTimeout(boolean isWarning) {
-        
+        if (isWarning) {
+            _view.addChatLine("Connection is slow...");
+        } else {
+            _view.addChatLine("Connection lost!");
+            
+            LooperService.getShared().asyncOnAWTAfterDelay(new SimpleCallback() {
+                @Override
+                public void perform() {
+                    _presenter.stop();
+                    _router.navigateToConnectMenuScreen();
+                }
+            }, TimeValue.buildSeconds(2));
+        }
     }
 
     @Override
