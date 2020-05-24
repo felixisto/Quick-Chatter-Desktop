@@ -134,6 +134,8 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             Logger.warning(this, "Already at connect menu screen, no need for navigation.");
             return;
         }
+        
+        closeAllPopupWindows();
 
         goToConnectMenuScreen();
     }
@@ -149,6 +151,8 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             Logger.error(this, "Can navigate to connect screen only from either chat OR connect menu screens!");
             return;
         }
+        
+        closeAllPopupWindows();
 
         goToConnectScreen();
     }
@@ -164,17 +168,23 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             Logger.error(this, "Can navigate to reconnect screen only from connect menu screen!");
             return;
         }
+        
+        closeAllPopupWindows();
 
         goToReconnectScreen();
     }
 
     @Override
     public void navigateToConnectingAsServer(@NotNull BEClient client) {
+        closeAllPopupWindows();
+        
         navigateToConnecting(client, true);
     }
 
     @Override
     public void navigateToConnectingAsClient(@NotNull BEClient client) {
+        closeAllPopupWindows();
+        
         navigateToConnecting(client, false);
     }
 
@@ -188,6 +198,8 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             Logger.error(this, "Can navigate to connecting screen from either reconnect OR connect screen!");
             return;
         }
+        
+        closeAllPopupWindows();
 
         if (isServer) {
             goToConnectingServerScreen(client);
@@ -209,11 +221,20 @@ public class PrimaryRouter implements Router.Primary, Router.System {
             Logger.error(this, "Can navigate to chat screen only from connecting screen!");
             return;
         }
+        
+        closeAllPopupWindows();
 
         goToChatScreen(client, transmitter, transmitterService);
     }
 
     // # Router.System
+    
+    @Override
+    public void closeAllPopupWindows() {
+        if (isFilePickerScreenVisible()) {
+            exitFilePickerScreen();
+        }
+    }
 
     @Override
     public void pickFile(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String description) {
@@ -491,6 +512,8 @@ public class PrimaryRouter implements Router.Primary, Router.System {
         if (_popoverViewController == null) {
             return;
         }
+        
+        Logger.message(this, "Exit pick file screen");
         
         _popoverViewController.onTerminate();
         
