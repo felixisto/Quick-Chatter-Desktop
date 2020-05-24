@@ -72,17 +72,7 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
 
         Logger.message(this, "Start scanning...");
 
-        try {
-            _scanner.start();
-            _scanner.subscribe(this);
-        } catch (Exception e) {
-            Logger.error(this, "Failed to runDiscoveryScan scanning, error: " + e.toString());
-            return;
-        }
-
-        _scanning.set(true);
-        LooperService.getShared().subscribe(this);
-
+        startScanningNow();
         startEmittingPresence();
     }
     
@@ -90,9 +80,7 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
     public void stopScan() {
         Logger.message(this, "Stop scanning.");
 
-        _scanner.unsubscribe(this);
-        _scanning.set(false);
-        LooperService.getShared().unsubscribe(this);
+        stopCurrentScan();
     }
 
     @Override
@@ -197,25 +185,34 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
         });
     }
 
-    // # Internals
+    // # Internals - Scan
+    
+    private void startScanningNow() {
+        _scanning.set(true);
+        _scanner.subscribe(this);
+        LooperService.getShared().subscribe(this);
+        
+        // No need to start scan, will be started by loop()
+    }
     
     private void stopCurrentScan() {
+        _scanning.set(false);
+        _scanner.unsubscribe(this);
+        LooperService.getShared().unsubscribe(this);
+        
         LooperService.getShared().asyncInBackground(new SimpleCallback() {
             @Override
             public void perform() {
-                stopCurrentScanNow();
+                try {
+                    _scanner.stop();
+                } catch (Exception e) {
+                    
+                }
             }
         });
     }
     
-    private void stopCurrentScanNow() {
-        try {
-            _scanner.stop();
-            stopScan();
-        } catch (Exception e) {
-
-        }
-    }
+    // # Internals - Emit presence
     
     private void startEmittingPresence() {
         LooperService.getShared().asyncInBackground(new SimpleCallback() {
@@ -248,6 +245,8 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
 
         startEmittingPresence();
     }
+    
+    // # Internals - model
 
     private void updateClientsData() {
         if (_data.getValues().equals(_clients.copyData())) {

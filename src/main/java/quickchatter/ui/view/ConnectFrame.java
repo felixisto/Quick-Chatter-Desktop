@@ -23,6 +23,9 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
     public @NotNull Callback<Integer> onSelectItem = Callback.createDoNothing();
     public @NotNull Callback<Integer> onClickItem = Callback.createDoNothing();
     public @NotNull Callback<Integer> onDoubleClickItem = Callback.createDoNothing();
+    
+    private String SCAN_TEXT_ON = TextValue.getText(TextValue.ScreenConnect_ScanON);
+    private String SCAN_TEXT_OFF = TextValue.getText(TextValue.ScreenConnect_ScanOFF);
 
     /**
      * Creates new form ConnectForm
@@ -33,49 +36,25 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
     }
     
     public boolean isScanON() {
-        return scanButton.isSelected();
+        return scanButton.getText().equals(SCAN_TEXT_ON);
     }
     
     public void startScan() {
-        if (isScanON()) {
-            return;
-        }
+        scanButton.setText(SCAN_TEXT_ON);
         
-        startScan(true);
+        onScanStart.perform();
     }
     
     public void stopScan() {
-        if (!isScanON()) {
-            return;
-        }
+        scanButton.setText(SCAN_TEXT_OFF);
         
-        stopScan(true);
+        onScanEnd.perform();
     }
     
     public void updateClientsListData(JListData<String> data) {
         resetSelectIndex();
         
         clientsList.setModel(data);
-    }
-    
-    private void startScan(boolean setSelection) {
-        scanButton.setText(TextValue.getText(TextValue.ScreenConnect_ScanON));
-        
-        if (setSelection) {
-            scanButton.setSelected(true);
-        }
-        
-        onScanStart.perform();
-    }
-    
-    private void stopScan(boolean setSelection) {
-        scanButton.setText(TextValue.getText(TextValue.ScreenConnect_ScanOFF));
-        
-        if (setSelection) {
-            scanButton.setSelected(false);
-        }
-        
-        onScanEnd.perform();
     }
     
     /**
@@ -87,14 +66,12 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        scanButton = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         clientsList = new javax.swing.JList<>();
         backButton = new javax.swing.JButton();
+        scanButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        scanButton.setText("Scan");
 
         clientsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         clientsList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -111,6 +88,13 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
             }
         });
 
+        scanButton.setText("Scan");
+        scanButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scanButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,10 +103,10 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                        .addComponent(scanButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backButton))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -130,8 +114,8 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(scanButton)
-                    .addComponent(backButton))
+                    .addComponent(backButton)
+                    .addComponent(scanButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -163,6 +147,14 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
             onDoubleClickItem(_selectedIndex);
         }
     }//GEN-LAST:event_clientsListMouseClicked
+
+    private void scanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scanButtonActionPerformed
+        if (!isScanON()){
+            startScan();
+        } else {
+            stopScan();
+        }
+    }//GEN-LAST:event_scanButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,19 +197,8 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
         
         this.setTitle(TextValue.getText(TextValue.ScreenConnect_Title));
         
-        scanButton.setText(TextValue.getText(TextValue.ScreenConnect_ScanOFF));
+        scanButton.setText(SCAN_TEXT_OFF);
         scanButton.setSelected(false);
-        
-        scanButton.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent event) {
-                if (scanButton.isSelected()){
-                    startScan(false);
-                } else {
-                    stopScan(false);
-                }
-            }
-        });
     }
     
     // # BaseView
@@ -292,6 +273,6 @@ public class ConnectFrame extends javax.swing.JFrame implements BaseView.Whole {
     private javax.swing.JButton backButton;
     private javax.swing.JList<String> clientsList;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton scanButton;
+    private javax.swing.JButton scanButton;
     // End of variables declaration//GEN-END:variables
 }
