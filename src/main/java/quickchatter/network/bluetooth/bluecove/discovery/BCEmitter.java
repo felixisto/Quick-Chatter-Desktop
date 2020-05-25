@@ -7,9 +7,11 @@ package quickchatter.network.bluetooth.bluecove.discovery;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.bluetooth.DiscoveryAgent;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.network.bluetooth.basic.BEEmitter;
 import quickchatter.network.bluetooth.bluecove.BCAdapter;
+import quickchatter.utilities.Errors;
 import quickchatter.utilities.Logger;
 import quickchatter.utilities.SafeMutableArray;
 import quickchatter.utilities.SimpleCallback;
@@ -49,19 +51,33 @@ public class BCEmitter implements BEEmitter {
     }
 
     @Override
-    public synchronized void start() throws Exception {
-        //if (_active.getAndSet(true)) {
-        //    return;
-        //}
-
-        Logger.message(this, "Discovering...");
+    public void start() throws Exception {
+        if (!_adapter.isAvailable()) {
+            Errors.throwUnsupportedOperation("Bluetooth unavailable");
+        }
         
-        // No need, BDDiscovery does that
+        if (_active.getAndSet(true)) {
+            return;
+        }
+        
+        _adapter.getAdapter().setDiscoverable(DiscoveryAgent.GIAC);
+
+        Logger.message(this, "Device is now discoverable!");
     }
 
     @Override
     public void stop() throws Exception {
-        //Errors.throwUnsupportedOperation("Cannot stop");
+        if (!_adapter.isAvailable()) {
+            Errors.throwUnsupportedOperation("Bluetooth unavailable");
+        }
+        
+        if (!_active.getAndSet(false)) {
+            return;
+        }
+        
+        Logger.message(this, "Device is no longer discoverable!");
+        
+        _adapter.getAdapter().setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
     }
 
     @Override

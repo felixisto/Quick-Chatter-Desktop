@@ -81,6 +81,7 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
         Logger.message(this, "Stop scanning.");
 
         stopCurrentScan();
+        stopEmittingPresence();
     }
 
     @Override
@@ -233,6 +234,14 @@ public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BE
 
         try {
             _emitter.start();
+        } catch (Exception e) {
+
+        }
+    }
+    
+    private void stopEmittingPresence() {
+        try {
+            _emitter.stop();
         } catch (Exception e) {
 
         }
