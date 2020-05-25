@@ -78,6 +78,8 @@ public class BCEmitter implements BEEmitter {
         Logger.message(this, "Device is no longer discoverable!");
         
         _adapter.getAdapter().setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
+        
+        performAndClearEndCompletions();
     }
 
     @Override
