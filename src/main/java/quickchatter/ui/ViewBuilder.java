@@ -7,7 +7,6 @@ package quickchatter.ui;
 
 import org.jetbrains.annotations.NotNull;
 import quickchatter.navigation.Router;
-import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.ChatFrame;
 import quickchatter.ui.view.ConnectFrame;
 import quickchatter.ui.view.ConnectMenuFrame;
@@ -44,13 +43,5 @@ public class ViewBuilder {
     public @NotNull ChatFrame buildChatScreen() {
         ChatFrame view = new ChatFrame();
         return view;
-    }
-
-    public @NotNull BaseView.Whole buildPickFileScreen() {
-        return null;
-    }
-
-    public @NotNull BaseView.Whole buildPickFileDestinationScreen() {
-        return null;
     }
 }
