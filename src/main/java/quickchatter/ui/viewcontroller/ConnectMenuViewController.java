@@ -92,14 +92,4 @@ public class ConnectMenuViewController implements BaseViewController.ConnectMenu
     public void navigateBack() {
         _router.navigateBack();
     }
-
-    @Override
-    public void onConnectClick() {
-        _router.navigateToConnectScreen();
-    }
-
-    @Override
-    public void onReconnectClick() {
-        _router.navigateToReconnectScreen();
-    }
 }

@@ -20,8 +20,7 @@ import quickchatter.utilities.SimpleCallback;
 
 public interface BasePresenterDelegate extends MVP.View {
     interface ConnectMenu extends BasePresenterDelegate {
-        void onConnectClick();
-        void onReconnectClick();
+        
     }
     
     interface GenericConnect extends BasePresenterDelegate {
