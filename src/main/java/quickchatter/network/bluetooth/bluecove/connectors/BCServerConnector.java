@@ -52,16 +52,6 @@ public class BCServerConnector implements BEConnector.Server {
     }
 
     @Override
-    public boolean isConnecting() {
-        return _running.get() && getOpenedServerSocket() == null;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return _running.get() && getOpenedServerSocket() != null;
-    }
-
-    @Override
     public void start(final @NotNull Callback<BESocket> success, final @NotNull Callback<Exception> failure) throws Exception, BEError {
         if (_running.getAndSet(true)) {
             return;
@@ -74,34 +64,7 @@ public class BCServerConnector implements BEConnector.Server {
         SimpleCallback completion = new SimpleCallback() {
             @Override
             public void perform() {
-                Logger.message(self, "Opening server socket...");
-
-                StreamConnectionNotifier serverSocket = getOpenedServerSocket();
-
-                try {
-                    if (serverSocket == null) {
-                        serverSocket = startServerSync();
-                        _serverSocket.set(serverSocket);
-                    }
-
-                    Logger.message(self, "Server searching for clients...");
-                    
-                    StreamConnection connection = serverSocket.acceptAndOpen();
-                    
-                    if (connection == null) {
-                        Errors.throwTimeoutError("Timeout");
-                    }
-
-                    Logger.message(self, "Successfully paired with client!");
-
-                    success.perform(new BCSocket(connection));
-                } catch (Exception e) {
-                    cleanup(serverSocket);
-
-                    Logger.error(self, "Failed to open server socket, error: " + e);
-
-                    failure.perform(e);
-                }
+                startServer(success, failure);
             }
         };
 
@@ -110,24 +73,43 @@ public class BCServerConnector implements BEConnector.Server {
 
     @Override
     public void stop() {
-        StreamConnectionNotifier serverSocket = _serverSocket.getAndSet(null);
-        
-        cleanup(serverSocket);
+        // Connector cannot stop, does not support fresh restart
     }
 
     // # Internals
     
-    private void cleanup(@Nullable StreamConnectionNotifier serverSocket) {
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (Exception e) {
-
+    private void startServer(final @NotNull Callback<BESocket> success, final @NotNull Callback<Exception> failure) {
+        StreamConnectionNotifier serverSocket = getOpenedServerSocket();
+        
+        try {
+            if (serverSocket == null) {
+                serverSocket = openServerSocket();
+                _serverSocket.set(serverSocket);
             }
+            
+            Logger.message(this, "Opened server socket and listening for incoming connections...");
+            
+            StreamConnection connection = serverSocket.acceptAndOpen();
+            
+            if (connection == null) {
+                Errors.throwTimeoutError("Timeout");
+            }
+            
+            Logger.message(this, "Successfully paired with client!");
+            
+            resetServerSocket(false);
+            
+            success.perform(new BCSocket(connection, serverSocket));
+        } catch (Exception e) {
+            resetServerSocket(true);
+            
+            Logger.error(this, "Failed to open server socket, error: " + e);
+            
+            failure.perform(e);
         }
     }
 
-    private @NotNull StreamConnectionNotifier startServerSync() throws Exception {
+    private @NotNull StreamConnectionNotifier openServerSocket() throws Exception {
         if (!_adapter.isAvailable()) {
             Errors.throwUnsupportedOperation("Bluetooth adapter is not available");
         }
@@ -143,5 +125,17 @@ public class BCServerConnector implements BEConnector.Server {
         }
         
         return (StreamConnectionNotifier)streamConnNotifier;
+    }
+    
+    private void resetServerSocket(boolean close) {
+        try {
+            if (close) {
+                _serverSocket.get().close();
+            }
+            
+            _serverSocket.set(null);
+        } catch (Exception e) {
+            
+        }
     }
 }

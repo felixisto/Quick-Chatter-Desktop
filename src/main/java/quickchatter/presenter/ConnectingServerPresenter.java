@@ -83,24 +83,10 @@ public class ConnectingServerPresenter implements BasePresenter.Connecting {
     
     @Override
     public void stop() {
-        LooperService.getShared().asyncInBackground(new SimpleCallback() {
-            @Override
-            public void perform() {
-                stopAndResetTransmitter();
-            }
-        });
-    }
-    
-    private void stopAndResetTransmitter() {
-        if (_transmitter != null) {
-            _transmitter.stop();
-            _transmitter = null;
-        }
+        _connector.stop();
     }
     
     private @NotNull BCTransmitter startServer(@NotNull BESocket socket) {
-        stopAndResetTransmitter();
-
         try {
             _transmitter = ConnectingPresenter.startServer(socket);
         } catch (Exception e) {

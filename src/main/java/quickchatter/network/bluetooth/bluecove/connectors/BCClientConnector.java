@@ -7,10 +7,8 @@ package quickchatter.network.bluetooth.bluecove.connectors;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.bluetooth.UUID;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import quickchatter.network.bluetooth.basic.BEClient;
 import quickchatter.network.bluetooth.basic.BEConnector;
 import quickchatter.network.bluetooth.basic.BEError;
@@ -30,7 +28,6 @@ public class BCClientConnector implements BEConnector.Client {
 
     private final @NotNull AtomicBoolean _running = new AtomicBoolean(false);
 
-    private final @NotNull AtomicReference<BESocket> _clientSocket = new AtomicReference<>();
     private final int _tryCountOriginal;
     private final @NotNull AtomicInteger _tryCount = new AtomicInteger();
     private final @NotNull TimeValue _retryDelay;
@@ -44,11 +41,7 @@ public class BCClientConnector implements BEConnector.Client {
     }
 
     // # Properties
-
-    private @Nullable BESocket getOpenedSocket() {
-        return _clientSocket.get();
-    }
-
+    
     public boolean isTryExhausted() {
         return _tryCount.get() <= 0;
     }
@@ -65,20 +58,12 @@ public class BCClientConnector implements BEConnector.Client {
     }
 
     @Override
-    public boolean isConnecting() {
-        return _running.get() && getOpenedSocket() == null;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return _running.get() && getOpenedSocket() != null;
-    }
-
-    @Override
     public void connect(@NotNull Callback<BESocket> success, @NotNull Callback<Exception> failure) throws Exception, BEError {
         if (_running.getAndSet(true)) {
             Errors.throwCannotStartTwice("Already running");
         }
+        
+        Logger.message(this, "Connect start");
 
         _tryCount.set(_tryCountOriginal);
 
@@ -86,8 +71,8 @@ public class BCClientConnector implements BEConnector.Client {
     }
 
     @Override
-    public void terminate() {
-
+    public void stop() {
+        // Connector cannot stop, does not support fresh restart
     }
 
     // # Internals
@@ -108,8 +93,6 @@ public class BCClientConnector implements BEConnector.Client {
                     @Override
                     public void perform(BESocket socket) {
                         Logger.message(self, "Successfully paired with server '" + _server.getName() + "'!");
-                        
-                        _clientSocket.set(socket);
                         
                         success.perform(socket);
                     }
