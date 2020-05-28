@@ -72,8 +72,14 @@ public class BCServerConnector implements BEConnector.Server {
     }
 
     @Override
-    public void stop() {
-        // Connector cannot stop, does not support fresh restart
+    public synchronized void stop() {
+        if (!_running.get()) {
+            return;
+        }
+        
+        resetServerSocket(true);
+        
+        // Does not support fresh restart
     }
 
     // # Internals
@@ -120,7 +126,13 @@ public class BCServerConnector implements BEConnector.Server {
         
         Connection streamConnNotifier = Connector.open(connectionString);
         
+        if (streamConnNotifier == null) {
+            Errors.throwUnknownError("Unknown error");
+        }
+        
         if (!(streamConnNotifier instanceof StreamConnectionNotifier)) {
+            streamConnNotifier.close();
+            
             Errors.throwUnknownError("Unknown error");
         }
         
