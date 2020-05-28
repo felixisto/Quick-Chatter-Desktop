@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /// Reads data given by a TransmissionReadStream.
-/// Information is encapsulated by TransmissionMessage.
+/// Information is encapsulated by TransmissionMessagePart.
 public class BCTransmissionReadLine implements TransmissionLine.Input {
     public static final boolean DEBUG_LOG = true;
 

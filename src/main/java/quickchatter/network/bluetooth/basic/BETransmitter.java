@@ -11,7 +11,7 @@ public interface BETransmitter {
 
     }
 
-    interface Service extends BETransmitter, Transmitter.Service {
+    interface Service extends BETransmitter, Transmitter.Service, Transmitter.Pinger {
 
     }
 }

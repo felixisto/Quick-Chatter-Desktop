@@ -11,21 +11,24 @@ public interface Transmitter {
     void start() throws Exception;
     void stop();
 
-    @NotNull List<TransmissionLine.Input> getInputLines();
-    @NotNull List<TransmissionLine.Output> getOutputLines();
-
-    boolean isPingActive();
-    @NotNull TimeValue getPingDelay();
-    void setPingDelay(@NotNull TimeValue delay);
-    void activatePing();
-    void deactivatePing();
-
-    interface Writer extends Transmitter {
-        void sendMessage(@NotNull TransmissionMessage message) throws Exception;
+    interface Pinger {
+        boolean isPingActive();
+        @NotNull TimeValue getPingDelay();
+        void setPingDelay(@NotNull TimeValue delay);
+        void activatePing();
+        void deactivatePing();
+    }
+    
+    interface Reader extends Transmitter {
+        @NotNull List<TransmissionLine.Input> getInputLines();
+        
+        void readNewMessages(@NotNull TransmissionType type, @NotNull Callback<List<TransmissionMessage>> completion) throws Exception;
     }
 
-    interface Reader extends Transmitter {
-        void readNewMessages(@NotNull TransmissionType type, @NotNull Callback<List<TransmissionMessage>> completion) throws Exception;
+    interface Writer extends Transmitter {
+        @NotNull List<TransmissionLine.Output> getOutputLines();
+        
+        void sendMessage(@NotNull TransmissionMessage message) throws Exception;
     }
 
     interface Service extends Transmitter {
