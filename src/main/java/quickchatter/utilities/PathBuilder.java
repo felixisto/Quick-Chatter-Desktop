@@ -64,7 +64,7 @@ public class PathBuilder {
         
         String result = "";
         
-        String[] segments = path.split(_separator);
+        String[] segments = path.split(Pattern.quote(_separator));
         
         for (int e = 0; e < segments.length-1; e++) {
             if (e < segments.length-2) {
@@ -152,7 +152,7 @@ class GenericPath implements Path {
             return "";
         }
         
-        String[] segments = path.split("/");
+        String[] segments = path.split(Pattern.quote(PathBuilder.URI_SEPARATOR));
         return segments[segments.length-1];
     }
 
