@@ -48,7 +48,7 @@ public class BCServerConnector implements BEConnector.Server {
     // # BEConnector.Server
 
     public @NotNull UUID getUUID() {
-        return BCUUID.get();
+        return BCUUID.getGeneric();
     }
 
     @Override

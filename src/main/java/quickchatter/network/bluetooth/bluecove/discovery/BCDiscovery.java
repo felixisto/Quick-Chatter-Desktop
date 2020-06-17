@@ -103,6 +103,9 @@ public class BCDiscovery implements LooperClient, DiscoveryListener {
 
         synchronized (lock) {
             if (isRunning()) {
+                if (completion != null) {
+                    _scanCompletions.add(completion);
+                }
                 return;
             }
 
@@ -129,19 +132,22 @@ public class BCDiscovery implements LooperClient, DiscoveryListener {
     @Override
     public void loop() {
         Set<RemoteDevice> devices = getFoundDevicesFromLastScan();
-
+        List<Callback<Set<RemoteDevice>>> callbacks;
+        
         synchronized (lock) {
             if (!isRunning()) {
                 LooperService.getShared().unsubscribe(this);
 
-                List<Callback<Set<RemoteDevice>>> callbacks = _scanCompletions.copyData();
+                callbacks = _scanCompletions.copyData();
 
                 _scanCompletions.removeAll();
-
-                for (Callback<Set<RemoteDevice>> callback: callbacks) {
-                    callback.perform(devices);
-                }
+            } else {
+                return;
             }
+        }
+        
+        for (Callback<Set<RemoteDevice>> callback: callbacks) {
+            callback.perform(devices);
         }
     }
 
@@ -218,4 +224,3 @@ public class BCDiscovery implements LooperClient, DiscoveryListener {
         _isInqueryScanRunning.set(false);
     }
 }
-

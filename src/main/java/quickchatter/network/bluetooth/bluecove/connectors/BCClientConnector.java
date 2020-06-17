@@ -49,7 +49,7 @@ public class BCClientConnector implements BEConnector.Client {
     // # BEConnector.Client
 
     public @NotNull UUID getUUID() {
-        return BCUUID.get();
+        return BCUUID.getGeneric();
     }
 
     @Override

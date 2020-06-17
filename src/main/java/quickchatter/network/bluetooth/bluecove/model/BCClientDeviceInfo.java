@@ -5,15 +5,25 @@
  */
 package quickchatter.network.bluetooth.bluecove.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.bluetooth.RemoteDevice;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import quickchatter.network.bluetooth.bluecove.BCClientDevice;
+import quickchatter.network.bluetooth.service.BEService;
+import quickchatter.utilities.CollectionUtilities;
 
 public class BCClientDeviceInfo implements BCClientDevice {
     private final @NotNull RemoteDevice device;
     private final @NotNull String name;
+    private final @NotNull List<BEService> services;
 
     public BCClientDeviceInfo(@NotNull RemoteDevice device) {
+        this(device, new ArrayList<>());
+    }
+    
+    public BCClientDeviceInfo(@NotNull RemoteDevice device, @NotNull List<BEService> services) {
         this.device = device;
         
         String deviceName;
@@ -25,6 +35,7 @@ public class BCClientDeviceInfo implements BCClientDevice {
         }
         
         this.name = deviceName;
+        this.services = CollectionUtilities.copy(services);
     }
 
     @Override
@@ -36,4 +47,15 @@ public class BCClientDeviceInfo implements BCClientDevice {
     public @NotNull RemoteDevice asRemoteDevice() {
         return device;
     }
+    
+    @Override
+    public @NotNull List<BEService> getServices() {
+        return services;
+    }
+    
+    @Override
+    public @Nullable boolean suportsService(@NotNull BEService service) {
+        return false;
+    }
 }
+

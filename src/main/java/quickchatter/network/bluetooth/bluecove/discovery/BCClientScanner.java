@@ -29,6 +29,7 @@ import quickchatter.utilities.Parser;
 import quickchatter.utilities.SafeMutableArray;
 import quickchatter.utilities.TimeValue;
 
+// Wraps a BCDiscovery, and converts found RemoteDevice objects to BEClient objects.
 public class BCClientScanner implements BEClientScanner, LooperClient {
     public static final TimeValue CLIENT_DISCOVERY_TIMEOUT = TimeValue.buildSeconds(10);
 

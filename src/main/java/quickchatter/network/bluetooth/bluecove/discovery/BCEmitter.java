@@ -22,6 +22,8 @@ import quickchatter.utilities.TimeValue;
 public class BCEmitter implements BEEmitter {
     public static final @NotNull TimeValue DEFAULT_EMIT_TIME = TimeValue.buildSeconds(30);
 
+    private final Object lock = new Object();
+    
     private final @NotNull BCAdapter _adapter;
     private final @NotNull TimeValue _time;
     private final @NotNull AtomicBoolean _active = new AtomicBoolean();
@@ -56,13 +58,15 @@ public class BCEmitter implements BEEmitter {
             Errors.throwUnsupportedOperation("Bluetooth unavailable");
         }
         
-        if (_active.getAndSet(true)) {
-            return;
+        synchronized (lock) {
+            if (_active.getAndSet(true)) {
+                return;
+            }
+            
+            _adapter.getAdapter().setDiscoverable(DiscoveryAgent.GIAC);
+            
+            Logger.message(this, "Device is now discoverable!");
         }
-        
-        _adapter.getAdapter().setDiscoverable(DiscoveryAgent.GIAC);
-
-        Logger.message(this, "Device is now discoverable!");
     }
 
     @Override
@@ -71,15 +75,17 @@ public class BCEmitter implements BEEmitter {
             Errors.throwUnsupportedOperation("Bluetooth unavailable");
         }
         
-        if (!_active.getAndSet(false)) {
-            return;
+        synchronized (lock) {
+            if (!_active.getAndSet(false)) {
+                return;
+            }
+            
+            Logger.message(this, "Device is no longer discoverable!");
+            
+            _adapter.getAdapter().setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
+            
+            performAndClearEndCompletions();
         }
-        
-        Logger.message(this, "Device is no longer discoverable!");
-        
-        _adapter.getAdapter().setDiscoverable(DiscoveryAgent.NOT_DISCOVERABLE);
-        
-        performAndClearEndCompletions();
     }
 
     @Override
@@ -99,4 +105,3 @@ public class BCEmitter implements BEEmitter {
         }
     }
 }
-
