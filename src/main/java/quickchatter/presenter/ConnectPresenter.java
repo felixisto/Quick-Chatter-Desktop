@@ -8,17 +8,17 @@ package quickchatter.presenter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.mvp.MVP;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BEClientScanner;
-import quickchatter.network.bluetooth.basic.BEClientScannerListener;
-import quickchatter.network.bluetooth.basic.BEEmitter;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BEClientScanner;
+import network.bluetooth.basic.BEClientScannerListener;
+import network.bluetooth.basic.BEEmitter;
 import quickchatter.ui.listdata.BEClientsListData;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperClient;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.SafeMutableArray;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.LooperClient;
+import utilities.LooperService;
+import utilities.SafeMutableArray;
+import utilities.SimpleCallback;
 
 public class ConnectPresenter implements BasePresenter.Connect, LooperClient, BEClientScannerListener {
     private @NotNull BasePresenterDelegate.Connect _delegate;

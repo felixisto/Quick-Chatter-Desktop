@@ -8,18 +8,18 @@ package quickchatter.presenter.worker;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.network.basic.TransmissionReadStream;
-import quickchatter.network.basic.TransmissionWriteStream;
-import quickchatter.network.bluetooth.basic.BESocket;
-import quickchatter.network.bluetooth.bluecove.BCConstants;
-import quickchatter.network.bluetooth.bluecove.BCSocket;
-import quickchatter.network.bluetooth.bluecove.other.BCStandardReadWriteBandwidth;
-import quickchatter.network.bluetooth.bluecove.other.BCStandardReadWriteBandwidthMonitor;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionLine;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionLineBuilder;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmitter;
-import quickchatter.utilities.DataSize;
-import quickchatter.utilities.Errors;
+import network.basic.TransmissionReadStream;
+import network.basic.TransmissionWriteStream;
+import network.bluetooth.basic.BESocket;
+import network.bluetooth.bluecove.BCConstants;
+import network.bluetooth.bluecove.BCSocket;
+import network.bluetooth.bluecove.other.BCStandardReadWriteBandwidth;
+import network.bluetooth.bluecove.other.BCStandardReadWriteBandwidthMonitor;
+import network.bluetooth.bluecove.transmission.BCTransmissionLine;
+import network.bluetooth.bluecove.transmission.BCTransmissionLineBuilder;
+import network.bluetooth.bluecove.transmission.BCTransmitter;
+import utilities.DataSize;
+import utilities.Errors;
 
 public class ConnectingPresenter {
     public static @NotNull BCTransmitter startServer(@NotNull BESocket socket) throws Exception {

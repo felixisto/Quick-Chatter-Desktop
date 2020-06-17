@@ -6,10 +6,10 @@
 package quickchatter.presenter.worker;
 
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.fundamentals.FilePath;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import filesystem.fundamentals.FilePath;
+import utilities.Callback;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public interface SendFilePerformerDelegate {
     void onAskedToReceiveFile(@NotNull Callback<Path> accept,

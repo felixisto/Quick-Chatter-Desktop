@@ -8,7 +8,7 @@ package quickchatter.ui;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
-import quickchatter.utilities.Logger;
+import utilities.Logger;
 
 /**
  * The application text values are here, including the localization values.

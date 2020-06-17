@@ -6,11 +6,11 @@
 package quickchatter.navigation;
 
 import org.jetbrains.annotations.NotNull;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BETransmitter;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BETransmitter;
+import utilities.Callback;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public interface Router {
     void navigateBack();

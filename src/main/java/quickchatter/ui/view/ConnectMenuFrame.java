@@ -8,7 +8,7 @@ package quickchatter.ui.view;
 import javax.swing.JFrame;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.ui.TextValue;
-import quickchatter.utilities.SimpleCallback;
+import utilities.SimpleCallback;
 
 public class ConnectMenuFrame extends javax.swing.JFrame implements BaseView.Whole {
     // Callbacks

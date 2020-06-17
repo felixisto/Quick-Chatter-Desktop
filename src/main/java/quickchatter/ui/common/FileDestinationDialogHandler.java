@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import quickchatter.presenter.BasePresenter;
 import quickchatter.ui.view.BaseView;
-import quickchatter.utilities.AlertWindows;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.SimpleCallback;
+import utilities.AlertWindows;
+import utilities.Callback;
+import utilities.SimpleCallback;
 
 public class FileDestinationDialogHandler implements BasePresenter.FileDestinationHandler {
     private @Nullable Component _view;

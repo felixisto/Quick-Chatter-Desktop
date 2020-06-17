@@ -10,13 +10,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.model.EntityInfo;
+import filesystem.model.EntityInfo;
 import quickchatter.ui.TextValue;
 import quickchatter.ui.listdata.FileSystemEntitiesTableData;
 import quickchatter.ui.listdata.JTableData;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.SimpleCallback;
 
 public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whole {
     public static final @NotNull String FOLDER_ICON_PATH = "folderIcon.png";

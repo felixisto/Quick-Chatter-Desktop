@@ -6,13 +6,13 @@
 package quickchatter.ui.viewcontroller;
 
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.fundamentals.DirectoryPath;
-import quickchatter.filesystem.fundamentals.FilePath;
+import filesystem.fundamentals.DirectoryPath;
+import filesystem.fundamentals.FilePath;
 import quickchatter.navigation.Router;
 import quickchatter.presenter.BasePresenter;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public class DirectoryPickerViewController extends FilePickerViewController {
     private @NotNull BasePresenter.FilePicker _filePickerPresenter;

@@ -6,28 +6,28 @@
 package quickchatter.presenter;
 
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.fundamentals.FilePath;
+import filesystem.fundamentals.FilePath;
 import quickchatter.mvp.MVP;
-import quickchatter.network.basic.StreamBandwidth;
-import quickchatter.network.basic.TransmissionMessage;
-import quickchatter.network.basic.TransmissionType;
-import quickchatter.network.basic.TransmitterListener;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BETransmitter;
-import quickchatter.network.bluetooth.bluecove.BCConstants;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionMessage;
+import network.basic.StreamBandwidth;
+import network.basic.TransmissionMessage;
+import network.basic.TransmissionType;
+import network.basic.TransmitterListener;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BETransmitter;
+import network.bluetooth.bluecove.BCConstants;
+import network.bluetooth.bluecove.transmission.BCTransmissionMessage;
 import quickchatter.presenter.worker.SendFilePerformer;
 import quickchatter.presenter.worker.SendFilePerformerDelegate;
 import quickchatter.ui.chat.UIChat;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperClient;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
-import quickchatter.utilities.TimeValue;
-import quickchatter.utilities.Timer;
+import utilities.Callback;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.LooperClient;
+import utilities.LooperService;
+import utilities.Path;
+import utilities.SimpleCallback;
+import utilities.TimeValue;
+import utilities.Timer;
 
 public class ChatPresenter implements BasePresenter.Chat, LooperClient, TransmitterListener, SendFilePerformerDelegate {
     private @NotNull BasePresenterDelegate.Chat _delegate;

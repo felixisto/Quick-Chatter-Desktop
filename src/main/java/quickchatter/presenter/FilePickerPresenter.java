@@ -11,22 +11,22 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import quickchatter.filesystem.fundamentals.DirectoryPath;
-import quickchatter.filesystem.fundamentals.FilePath;
-import quickchatter.filesystem.model.DirectoryContents;
-import quickchatter.filesystem.model.EntityInfo;
-import quickchatter.filesystem.repository.RepoDirectory;
-import quickchatter.filesystem.repository.RepoDirectoryCache;
-import quickchatter.filesystem.repository.Repository;
-import quickchatter.filesystem.worker.loader.FileSystemLoader;
+import filesystem.fundamentals.DirectoryPath;
+import filesystem.fundamentals.FilePath;
+import filesystem.model.DirectoryContents;
+import filesystem.model.EntityInfo;
+import filesystem.repository.RepoDirectory;
+import filesystem.repository.RepoDirectoryCache;
+import filesystem.repository.Repository;
+import filesystem.worker.loader.FileSystemLoader;
 import quickchatter.mvp.MVP;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.Parser;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SafeMutableArray;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Logger;
+import utilities.LooperService;
+import utilities.Parser;
+import utilities.Path;
+import utilities.SafeMutableArray;
+import utilities.SimpleCallback;
 
 /// A massive presenter that implements various file picking functionality.
 public class FilePickerPresenter implements BasePresenter.FilePicker, BasePresenter.FileSystemNavigation, BasePresenter.FileSystemDirectory {

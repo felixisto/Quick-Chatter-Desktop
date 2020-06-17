@@ -8,7 +8,7 @@ package quickchatter.ui.listdata;
 import java.util.List;
 import javax.swing.table.TableModel;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.utilities.Copyable;
+import utilities.Copyable;
 
 public interface JTableData <T> extends TableModel, Copyable<JTableData <T>> {
     @NotNull List<T> getValues();

@@ -12,8 +12,8 @@ import quickchatter.presenter.BasePresenter;
 import quickchatter.ui.ViewBuilder;
 import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.ConnectMenuFrame;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Logger;
+import utilities.SimpleCallback;
 
 public class ConnectMenuViewController implements BaseViewController.ConnectMenu {
     private final @NotNull BasePresenter.ConnectMenu _presenter;

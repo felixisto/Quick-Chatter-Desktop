@@ -8,16 +8,16 @@ package quickchatter.presenter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import quickchatter.mvp.MVP;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BEConnector;
-import quickchatter.network.bluetooth.basic.BESocket;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmitter;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BEConnector;
+import network.bluetooth.basic.BESocket;
+import network.bluetooth.bluecove.transmission.BCTransmitter;
 import quickchatter.presenter.worker.ConnectingPresenter;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.LooperService;
+import utilities.SimpleCallback;
 
 public class ConnectingServerPresenter implements BasePresenter.Connecting {
     private @NotNull BasePresenterDelegate.Connecting _delegate;

@@ -7,8 +7,8 @@ package quickchatter.presenter;
 
 import org.jetbrains.annotations.NotNull;
 import quickchatter.mvp.MVP;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
+import utilities.Errors;
+import utilities.Logger;
 
 public class ConnectMenuPresenter implements BasePresenter.ConnectMenu {
     private @NotNull BasePresenterDelegate.ConnectMenu _delegate;

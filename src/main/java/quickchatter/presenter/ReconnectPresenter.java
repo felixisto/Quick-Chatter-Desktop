@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.mvp.MVP;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BEPairing;
-import quickchatter.network.bluetooth.bluecove.discovery.BCPairing;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BEPairing;
+import network.bluetooth.bluecove.discovery.BCPairing;
 import quickchatter.ui.listdata.BEClientsListData;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.LooperService;
+import utilities.SimpleCallback;
 
 public class ReconnectPresenter implements BasePresenter.Reconnect {
     private @NotNull BCPairing _pairing;

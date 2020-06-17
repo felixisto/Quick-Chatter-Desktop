@@ -9,8 +9,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.ui.TextValue;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.SimpleCallback;
 
 public class ChatFrame extends javax.swing.JFrame implements BaseView.Whole {
     // Callbacks

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import quickchatter.utilities.StringUtilities;
+import utilities.StringUtilities;
 
 public class UIChat {
     public final @NotNull String newLine = "\n";

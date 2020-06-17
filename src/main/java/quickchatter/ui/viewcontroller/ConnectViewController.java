@@ -9,17 +9,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import quickchatter.mvp.MVP;
 import quickchatter.navigation.Router;
-import quickchatter.network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BEClient;
 import quickchatter.presenter.BasePresenter;
 import quickchatter.ui.ViewBuilder;
 import quickchatter.ui.listdata.BEClientsNamesListData;
 import quickchatter.ui.listdata.JListData;
 import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.ConnectFrame;
-import quickchatter.utilities.AlertWindows;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.SimpleCallback;
+import utilities.AlertWindows;
+import utilities.Callback;
+import utilities.Logger;
+import utilities.SimpleCallback;
 
 public class ConnectViewController implements BaseViewController.Connect {
     private final @NotNull BasePresenter.Connect _presenter;

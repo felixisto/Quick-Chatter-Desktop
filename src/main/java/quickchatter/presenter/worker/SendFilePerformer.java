@@ -13,21 +13,21 @@ import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import quickchatter.filesystem.fundamentals.FilePath;
-import quickchatter.filesystem.simple.SimpleFileSystem;
-import quickchatter.network.basic.TransmissionMessage;
-import quickchatter.network.basic.TransmissionType;
-import quickchatter.network.basic.Transmitter;
-import quickchatter.network.basic.TransmitterListener;
-import quickchatter.network.bluetooth.bluecove.BCConstants;
-import quickchatter.network.bluetooth.bluecove.segment.BCTransmissionMessageSegment;
-import quickchatter.network.bluetooth.bluecove.transmission.BCTransmissionMessage;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.DataSize;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import filesystem.fundamentals.FilePath;
+import filesystem.simple.SimpleFileSystem;
+import network.basic.TransmissionMessage;
+import network.basic.TransmissionType;
+import network.basic.Transmitter;
+import network.basic.TransmitterListener;
+import network.bluetooth.bluecove.BCConstants;
+import network.bluetooth.bluecove.segment.BCTransmissionMessageSegment;
+import network.bluetooth.bluecove.transmission.BCTransmissionMessage;
+import utilities.Callback;
+import utilities.DataSize;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public class SendFilePerformer implements TransmitterListener {
     public enum State {

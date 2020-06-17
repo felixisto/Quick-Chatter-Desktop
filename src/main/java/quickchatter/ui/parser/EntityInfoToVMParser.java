@@ -6,9 +6,9 @@
 package quickchatter.ui.parser;
 
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.model.EntityInfo;
+import filesystem.model.EntityInfo;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Parser;
+import utilities.Parser;
 
 public class EntityInfoToVMParser implements Parser<EntityInfo, FileSystemEntityViewModel> {
     @Override

@@ -3,9 +3,9 @@ package quickchatter.ui.listdata;
 import java.util.List;
 import javax.swing.event.ListDataListener;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.utilities.CollectionUtilities;
-import quickchatter.utilities.Logger;
+import network.bluetooth.basic.BEClient;
+import utilities.CollectionUtilities;
+import utilities.Logger;
 
 public class BEClientsListData implements JListData<BEClient> {
     private final @NotNull List<BEClient> data;

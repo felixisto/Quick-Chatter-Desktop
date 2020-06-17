@@ -7,12 +7,12 @@ package quickchatter.presenter;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import quickchatter.filesystem.fundamentals.DirectoryPath;
-import quickchatter.filesystem.fundamentals.FilePath;
+import filesystem.fundamentals.DirectoryPath;
+import filesystem.fundamentals.FilePath;
 import quickchatter.mvp.MVP;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Path;
+import utilities.Callback;
+import utilities.Path;
 
 public interface BasePresenter extends MVP.Presenter {
     interface ConnectMenu extends BasePresenter {

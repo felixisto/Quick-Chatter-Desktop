@@ -8,17 +8,17 @@ package quickchatter.presenter;
 import java.io.File;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import quickchatter.filesystem.fundamentals.FilePath;
-import quickchatter.filesystem.model.EntityInfo;
-import quickchatter.filesystem.worker.loader.FileSystemLoader;
+import filesystem.fundamentals.FilePath;
+import filesystem.model.EntityInfo;
+import filesystem.worker.loader.FileSystemLoader;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Errors;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.LooperService;
-import quickchatter.utilities.Parser;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.Errors;
+import utilities.Logger;
+import utilities.LooperService;
+import utilities.Parser;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public class FileDestinationPickerPresenter extends FilePickerPresenter implements BasePresenter.FileDestinationPicker {
     private @Nullable BasePresenterDelegate.FilePicker _pickerDelegate;

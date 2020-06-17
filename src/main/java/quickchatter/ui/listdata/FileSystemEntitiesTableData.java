@@ -8,10 +8,10 @@ package quickchatter.ui.listdata;
 import java.util.List;
 import javax.swing.event.TableModelListener;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.model.EntityInfo;
+import filesystem.model.EntityInfo;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.CollectionUtilities;
-import quickchatter.utilities.Logger;
+import utilities.CollectionUtilities;
+import utilities.Logger;
 
 public class FileSystemEntitiesTableData implements JTableData<FileSystemEntityViewModel> {
     private final int _maxRowCount;

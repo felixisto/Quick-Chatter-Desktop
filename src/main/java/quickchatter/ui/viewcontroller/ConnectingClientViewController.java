@@ -8,14 +8,14 @@ package quickchatter.ui.viewcontroller;
 import org.jetbrains.annotations.NotNull;
 import quickchatter.mvp.MVP;
 import quickchatter.navigation.Router;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BETransmitter;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BETransmitter;
 import quickchatter.presenter.BasePresenter;
 import quickchatter.ui.ViewBuilder;
 import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.ConnectingFrame;
-import quickchatter.utilities.Logger;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Logger;
+import utilities.SimpleCallback;
 
 public class ConnectingClientViewController implements BaseViewController.Connecting {
     private final @NotNull BasePresenter.Connecting _presenter;

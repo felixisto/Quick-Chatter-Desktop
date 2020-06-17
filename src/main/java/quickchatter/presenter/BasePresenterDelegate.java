@@ -7,16 +7,16 @@ package quickchatter.presenter;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import quickchatter.filesystem.fundamentals.DirectoryPath;
-import quickchatter.filesystem.fundamentals.FilePath;
+import filesystem.fundamentals.DirectoryPath;
+import filesystem.fundamentals.FilePath;
 import quickchatter.mvp.MVP;
-import quickchatter.network.bluetooth.basic.BEClient;
-import quickchatter.network.bluetooth.basic.BETransmitter;
+import network.bluetooth.basic.BEClient;
+import network.bluetooth.basic.BETransmitter;
 import quickchatter.ui.listdata.JListData;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
-import quickchatter.utilities.Callback;
-import quickchatter.utilities.Path;
-import quickchatter.utilities.SimpleCallback;
+import utilities.Callback;
+import utilities.Path;
+import utilities.SimpleCallback;
 
 public interface BasePresenterDelegate extends MVP.View {
     interface ConnectMenu extends BasePresenterDelegate {
