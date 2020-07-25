@@ -116,12 +116,8 @@ public class ReconnectViewController implements BaseViewController.Reconnect {
         
         displayAskServerOrClient(new Callback<Boolean>() {
             @Override
-            public void perform(Boolean argument) {
-                if (argument) {
-                    _router.navigateToConnectingAsServer(client);
-                } else {
-                    _router.navigateToConnectingAsClient(client);
-                }
+            public void perform(Boolean asServer) {
+                navigateToConnectingScreen(client, asServer);
             }
         });
     }
@@ -144,6 +140,22 @@ public class ReconnectViewController implements BaseViewController.Reconnect {
         };
         
         AlertWindows.showChoice(_view, "Connect", "Connect as:", "Client", "Server", aCallback, bCallback);
+    }
+    
+    private void navigateToConnectingScreen(@NotNull BEClient client, boolean asServer) {
+        try {
+            if (asServer) {
+                _router.navigateToConnectingAsServer(client);
+            } else {
+                _router.navigateToConnectingAsClient(client);
+            }
+        } catch (Exception e) {
+            handleNavigationError(e);
+        }
+    }
+    
+    private void handleNavigationError(@NotNull Exception e) {
+        AlertWindows.showErrorMessage(_view, "Error", "Internal Error", "Ok");
     }
 }
 

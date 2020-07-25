@@ -28,17 +28,29 @@ public class ConnectMenuViewController implements BaseViewController.ConnectMenu
     }
     
     private void setupView() {
+        final ConnectMenuViewController self = this;
+        
         _view.onConnectClick = new SimpleCallback() {
             @Override
             public void perform() {
-                _router.navigateToConnectScreen();
+                try {
+                    _router.navigateToConnectScreen();
+                } catch (Exception e) {
+                    Logger.error(self, "Failed to navigate to connect screen, internal error: " + e);
+                    // Cannot do anything else
+                }
             }
         };
         
         _view.onReconnectClick = new SimpleCallback() {
             @Override
             public void perform() {
-                _router.navigateToReconnectScreen();
+                try {
+                    _router.navigateToReconnectScreen();
+                } catch (Exception e) {
+                    Logger.error(self, "Failed to navigate to reconnect screen, internal error: " + e);
+                    // Cannot do anything else
+                }
             }
         };
     }

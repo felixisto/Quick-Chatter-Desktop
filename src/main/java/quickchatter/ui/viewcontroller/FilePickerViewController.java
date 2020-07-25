@@ -17,6 +17,7 @@ import quickchatter.ui.listdata.FileSystemEntitiesTableData;
 import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.FilePickerFrame;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
+import org.jetbrains.annotations.Nullable;
 import utilities.Callback;
 import utilities.Logger;
 import utilities.Path;
@@ -86,13 +87,22 @@ public class FilePickerViewController implements BaseViewController.FilePicker {
             @Override
             public void perform(Integer index) {
                 if (_view.getSelectedIndex() >= 0) {
-                    onItemClick(index);
+                    onItemPickClick(index);
                 } else {
-                    onPickClick();
+                    onNoItemPickClick();
                 }
             }
         };
     }
+    
+    // # Read entities
+    
+    public @Nullable FileSystemEntityViewModel entityAt(int index) {
+        BasePresenter.FileSystemDirectory dirPresenter = _filePickerPresenter.getSystemDirectorySubpresenter();
+        FileSystemEntityViewModel entity = dirPresenter.getEntityInfoAt(index);
+        return entity;
+    }
+    
     
     // # FragmentFilePicker user events
 
@@ -104,24 +114,28 @@ public class FilePickerViewController implements BaseViewController.FilePicker {
         _filePickerPresenter.closeWithoutPick();
     }
 
-    public void onPickClick() {
+    public void onNoItemPickClick() {
         // Do nothing by default
     }
 
     public void onItemClick(int index) {
         // If clicked entity is directory, navigate
-        BasePresenter.FileSystemDirectory dirPresenter = _filePickerPresenter.getSystemDirectorySubpresenter();
-        FileSystemEntityViewModel entity = dirPresenter.getEntityInfoAt(index);
+        FileSystemEntityViewModel entity = entityAt(index);
 
         if (entity == null) {
             return;
         }
 
         if (entity.isDirectory) {
+            BasePresenter.FileSystemDirectory dirPresenter = _filePickerPresenter.getSystemDirectorySubpresenter();
             dirPresenter.navigateToEntityAt(index);
         } else {
             onPickFileEntity(entity);
         }
+    }
+    
+    public void onItemPickClick(int index) {
+        onItemClick(index);
     }
 
     public void onPickFileEntity(@NotNull FileSystemEntityViewModel entity) {

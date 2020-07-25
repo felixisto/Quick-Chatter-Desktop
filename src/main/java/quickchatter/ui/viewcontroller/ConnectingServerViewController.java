@@ -14,6 +14,7 @@ import quickchatter.presenter.BasePresenter;
 import quickchatter.ui.ViewBuilder;
 import quickchatter.ui.view.BaseView;
 import quickchatter.ui.view.ConnectingFrame;
+import utilities.AlertWindows;
 import utilities.Logger;
 import utilities.SimpleCallback;
 
@@ -99,7 +100,17 @@ public class ConnectingServerViewController implements BaseViewController.Connec
     public void navigateToChatScreen(@NotNull BEClient client,
                                      @NotNull BETransmitter.ReaderWriter transmitter,
                                      @NotNull BETransmitter.Service transmitterService) {
-        _router.navigateToChatScreen(client, transmitter, transmitterService);
+        try {
+            _router.navigateToChatScreen(client, transmitter, transmitterService);
+        } catch (Exception e) {
+            handleNavigationError(e);
+        }
+    }
+    
+    // # Internals
+    
+    private void handleNavigationError(@NotNull Exception e) {
+        AlertWindows.showErrorMessage(_view, "Error", "Internal Error", "Ok");
     }
 }
 

@@ -58,17 +58,7 @@ public class ChatViewController implements BaseViewController.Chat {
                     return;
                 }
                 
-                _systemRouter.pickFile(new Callback<Path>() {
-                    @Override
-                    public void perform(Path path) {
-                        _presenter.sendFile(path);
-                    }
-                }, new SimpleCallback() {
-                    @Override
-                    public void perform() {
-                        
-                    }
-                }, "Pick file to send");
+                pickFileToSend();
             }
         };
     }
@@ -142,10 +132,18 @@ public class ChatViewController implements BaseViewController.Chat {
 
     @Override
     public void onAskToAcceptTransferFile(@NotNull Callback<Path> accept, @NotNull SimpleCallback deny, @NotNull String name, @NotNull String description) {
+        final ChatViewController self = this;
+        
         SimpleCallback onAccept = new SimpleCallback() {
             @Override
             public void perform() {
-                _systemRouter.pickFileDestination(accept, deny, name, "Pick destination");
+                try {
+                    _systemRouter.pickFileDestination(accept, deny, name, "Pick destination");
+                } catch (Exception e) {
+                    Logger.error(self, "Failed to pick file destination, internal error: " + e);
+                    
+                    deny.perform();
+                }
             }
         };
         
@@ -159,6 +157,8 @@ public class ChatViewController implements BaseViewController.Chat {
 
     @Override
     public void onConnectionTimeout(boolean isWarning) {
+        final ChatViewController self = this;
+        
         if (isWarning) {
             _view.addChatLine("Connection is slow...");
         } else {
@@ -168,7 +168,13 @@ public class ChatViewController implements BaseViewController.Chat {
                 @Override
                 public void perform() {
                     _presenter.stop();
-                    _router.navigateToConnectMenuScreen();
+                    
+                    try {
+                        _router.navigateToConnectMenuScreen();
+                    } catch (Exception e) {
+                        Logger.error(self, "Failed to navigate back, internal error: " + e);
+                        // Cannot do anything else
+                    }
                 }
             }, TimeValue.buildSeconds(2));
         }
@@ -177,5 +183,29 @@ public class ChatViewController implements BaseViewController.Chat {
     @Override
     public void showError(String title, String message) {
         AlertWindows.showErrorMessage(_view, title, message, "Ok");
+    }
+    
+    // # Internals
+    
+    private void pickFileToSend() {
+        try {
+            _systemRouter.pickFile(new Callback<Path>() {
+                @Override
+                public void perform(Path path) {
+                    _presenter.sendFile(path);
+                }
+            }, new SimpleCallback() {
+                @Override
+                public void perform() {
+                    
+                }
+            }, "Pick file to send");
+        } catch (Exception e) {
+            handleNavigationError(e);
+        }
+    }
+    
+    private void handleNavigationError(@NotNull Exception e) {
+        AlertWindows.showErrorMessage(_view, "Error", "Internal Error", "Ok");
     }
 }

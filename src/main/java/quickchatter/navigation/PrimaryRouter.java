@@ -38,11 +38,13 @@ import quickchatter.ui.viewcontroller.ConnectMenuViewController;
 import quickchatter.ui.viewcontroller.ConnectViewController;
 import quickchatter.ui.viewcontroller.ConnectingClientViewController;
 import quickchatter.ui.viewcontroller.ConnectingServerViewController;
+import quickchatter.ui.viewcontroller.DirectoryPickerViewController;
 import quickchatter.ui.viewcontroller.FileDestinationPickerViewController;
 import quickchatter.ui.viewcontroller.FilePickerViewController;
 import quickchatter.ui.viewcontroller.ReconnectViewController;
 import quickchatter.ui.viewmodel.FileSystemEntityViewModel;
 import utilities.Callback;
+import utilities.Errors;
 import utilities.Logger;
 import utilities.LooperSwing;
 import utilities.Parser;
@@ -129,10 +131,11 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     }
 
     @Override
-    public void navigateToConnectMenuScreen() {
+    public void navigateToConnectMenuScreen() throws Exception {
         if (getState() == State.connectMenu) {
-            Logger.warning(this, "Already at connect menu screen, no need for navigation.");
-            return;
+            String message = "Already at connect menu screen, no need for navigation.";
+            Logger.warning(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         closeAllPopupWindows();
@@ -141,15 +144,17 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     }
 
     @Override
-    public void navigateToConnectScreen() {
+    public void navigateToConnectScreen() throws Exception {
         if (getState() == State.connect) {
-            Logger.warning(this, "Already at connect screen, no need for navigation.");
-            return;
+            String message = "Already at connect screen, no need for navigation.";
+            Logger.warning(this, message);
+            Errors.throwIllegalStateError(message);
         }
 
         if (getState() != State.connectMenu && getState() != State.chat) {
-            Logger.error(this, "Can navigate to connect screen only from either chat OR connect menu screens!");
-            return;
+            String message = "Can navigate to connect screen only from either chat OR connect menu screens!";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         closeAllPopupWindows();
@@ -158,15 +163,17 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     }
 
     @Override
-    public void navigateToReconnectScreen() {
+    public void navigateToReconnectScreen() throws Exception {
         if (getState() == State.reconnect) {
-            Logger.warning(this, "Already at connect screen, no need for navigation.");
-            return;
+            String message = "Already at connect screen, no need for navigation.";
+            Logger.warning(this, message);
+            Errors.throwIllegalStateError(message);
         }
 
         if (getState() != State.connectMenu) {
-            Logger.error(this, "Can navigate to reconnect screen only from connect menu screen!");
-            return;
+            String message = "Can navigate to reconnect screen only from connect menu screen!";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         closeAllPopupWindows();
@@ -175,28 +182,30 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     }
 
     @Override
-    public void navigateToConnectingAsServer(@NotNull BEClient client) {
+    public void navigateToConnectingAsServer(@NotNull BEClient client) throws Exception {
         closeAllPopupWindows();
         
         navigateToConnecting(client, true);
     }
 
     @Override
-    public void navigateToConnectingAsClient(@NotNull BEClient client) {
+    public void navigateToConnectingAsClient(@NotNull BEClient client) throws Exception {
         closeAllPopupWindows();
         
         navigateToConnecting(client, false);
     }
 
-    void navigateToConnecting(@NotNull BEClient client, boolean isServer) {
+    private void navigateToConnecting(@NotNull BEClient client, boolean isServer) {
         if (getState() == State.connecting) {
-            Logger.warning(this, "Already at connecting screen, no need for navigation.");
-            return;
+            String message = "Already at connecting screen, no need for navigation.";
+            Logger.warning(this, message);
+            Errors.throwIllegalStateError(message);
         }
 
         if (getState() != State.connect && getState() != State.reconnect) {
-            Logger.error(this, "Can navigate to connecting screen from either reconnect OR connect screen!");
-            return;
+            String message = "Can navigate to connecting screen from either reconnect OR connect screen!";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         closeAllPopupWindows();
@@ -211,15 +220,17 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     @Override
     public void navigateToChatScreen(@NotNull BEClient client,
                                      @NotNull BETransmitter.ReaderWriter transmitter,
-                                     @NotNull BETransmitter.Service transmitterService) {
+                                     @NotNull BETransmitter.Service transmitterService) throws Exception {
         if (getState() == State.chat) {
-            Logger.warning(this, "Already at chat screen, no need for navigation.");
-            return;
+            String message = "Already at chat screen, no need for navigation.";
+            Logger.warning(this, message);
+            Errors.throwIllegalStateError(message);
         }
 
         if (getState() != State.connecting) {
-            Logger.error(this, "Can navigate to chat screen only from connecting screen!");
-            return;
+            String message = "Can navigate to chat screen only from connecting screen!";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         closeAllPopupWindows();
@@ -237,31 +248,33 @@ public class PrimaryRouter implements Router.Primary, Router.System {
     }
 
     @Override
-    public void pickFile(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String description) {
+    public void pickFile(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String description) throws Exception {
         if (isFilePickerScreenVisible()) {
-            Logger.error(this, "Cannot open pick file screen again, its already open");
-            return;
+            String message = "Cannot open pick file screen again, its already open.";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
-        openPickFileScreen(false, success, failure, description);
+        openPickFileScreen(success, failure, description);
     }
 
     @Override
-    public void pickDirectory(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String description) {
+    public void pickDirectory(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String description) throws Exception {
         if (isFilePickerScreenVisible()) {
-            Logger.error(this, "Cannot open pick file screen again, its already open");
-            return;
+            String message = "Cannot open pick directory screen again, its already open.";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
-        openPickFileScreen(true, success, failure, description);
+        openPickDirectoryScreen(success, failure, description);
     }
 
-
     @Override
-    public void pickFileDestination(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String name, @NotNull String description) {
+    public void pickFileDestination(@NotNull Callback<Path> success, @NotNull SimpleCallback failure, @NotNull String name, @NotNull String description) throws Exception {
         if (isFilePickerScreenVisible()) {
-            Logger.error(this, "Cannot open pick file screen again, its already open");
-            return;
+            String message = "Cannot open pick file screen again, its already open";
+            Logger.error(this, message);
+            Errors.throwIllegalStateError(message);
         }
         
         openPickFileDestinationScreen(success, failure, name, description);
@@ -406,8 +419,7 @@ public class PrimaryRouter implements Router.Primary, Router.System {
         });
     }
 
-    private void openPickFileScreen(boolean pickDirectory,
-                                    @NotNull Callback<Path> success,
+    private void openPickFileScreen(@NotNull Callback<Path> success,
                                     @NotNull SimpleCallback failure,
                                     @NotNull String description) {
         Logger.message(this, "Open pick file screen");
@@ -427,6 +439,35 @@ public class PrimaryRouter implements Router.Primary, Router.System {
                 Parser<EntityInfo, FileSystemEntityViewModel> parser = new EntityInfoToVMParser();
                 FilePickerPresenter presenter = new FilePickerPresenter(_fileSystemLoader, _rootDirectoryRepo, parser);
                 FilePickerViewController vc = new FilePickerViewController(presenter, presenter, presenter, self, success, failure, description);
+                
+                _popoverViewController = vc;
+                
+                vc.onStart();
+            }
+        });
+    }
+    
+    private void openPickDirectoryScreen(@NotNull Callback<Path> success,
+                                         @NotNull SimpleCallback failure,
+                                         @NotNull String description) {
+        Logger.error(this, "Open pick directory screen");
+        
+        final PrimaryRouter self = this;
+        
+        LooperSwing.getShared().performCallback(new SimpleCallback() {
+            @Override
+            public void perform() {
+                try {
+                    _rootDirectoryRepo = _fileSystemLoader.readRootDirectoryInfo();
+                } catch (Exception e) {
+                    Logger.error(self, "Failed to open pick directory screen, could not load root info, error:" + e);
+                    failure.perform();
+                    return;
+                }
+                
+                Parser<EntityInfo, FileSystemEntityViewModel> parser = new EntityInfoToVMParser();
+                FilePickerPresenter presenter = new FilePickerPresenter(_fileSystemLoader, _rootDirectoryRepo, parser);
+                DirectoryPickerViewController vc = new DirectoryPickerViewController(presenter, presenter, presenter, self, success, failure, description);
                 
                 _popoverViewController = vc;
                 
