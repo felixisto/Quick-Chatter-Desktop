@@ -65,6 +65,8 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
     }
     
     public void setEntitiesData(@NotNull JTableData<FileSystemEntityViewModel> data) {
+        showTable(true);
+        
         tableData = data;
         entitiesTable.setModel(tableData);
         
@@ -80,7 +82,11 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
     public void setDescription(@NotNull String description) {
         setTitle(description);
         
-        descriptionLabel.setText(description);
+        descriptionText = description;
+        
+        if (entitiesTable.isVisible()) {
+            descriptionLabel.setText(descriptionText);
+        }
     }
 
     /**
@@ -97,7 +103,7 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
         backButton = new javax.swing.JButton();
         pathLabel = new javax.swing.JLabel();
         pickButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        entitiesTableScrollPane = new javax.swing.JScrollPane();
         entitiesTable = new javax.swing.JTable();
         descriptionLabel = new javax.swing.JLabel();
 
@@ -155,7 +161,7 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
         });
         entitiesTable.setColumnSelectionAllowed(true);
         entitiesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane3.setViewportView(entitiesTable);
+        entitiesTableScrollPane.setViewportView(entitiesTable);
 
         descriptionLabel.setText("Description");
 
@@ -166,18 +172,16 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(descriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(pickButton, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(entitiesTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(descriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(pickButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -187,13 +191,13 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(backButton)
                     .addComponent(pathLabel))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pickButton)
-                    .addComponent(descriptionLabel))
-                .addContainerGap())
+                .addComponent(entitiesTableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(descriptionLabel)
+                    .addComponent(pickButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -255,6 +259,8 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
         
         setTitle(TextValue.getText(TextValue.FilePicker_GenericTitle));
         
+        showTable(false);
+        
         entitiesTable.getTableHeader().setUI(null);
         entitiesTable.setDefaultRenderer(EntityInfo.class, renderer);
         
@@ -308,16 +314,28 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
         }
     }
     
+    private void showTable(boolean value) {
+        entitiesTable.setVisible(value);
+        pickButton.setVisible(value);
+        
+        if (value) {
+            descriptionLabel.setText(descriptionText);
+        } else {
+            descriptionLabel.setText("Loading contents...");
+        }
+    }
+    
     private FileSystemEntitiesTableRenderer renderer;
     private JTableData<FileSystemEntityViewModel> tableData;
     private int currentSelectIndex = -1;
+    private String descriptionText = "";
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JTable entitiesTable;
+    private javax.swing.JScrollPane entitiesTableScrollPane;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JButton pickButton;

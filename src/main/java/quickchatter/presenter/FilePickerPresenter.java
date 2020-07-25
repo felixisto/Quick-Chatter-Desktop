@@ -316,6 +316,8 @@ public class FilePickerPresenter implements BasePresenter.FilePicker, BasePresen
 
     private void updateDirectoryContents() {
         final FilePickerPresenter self = this;
+        
+        Logger.message(self, "Updating directory contents...");
 
         LooperService.getShared().asyncInBackground(new SimpleCallback() {
             @Override
@@ -323,6 +325,7 @@ public class FilePickerPresenter implements BasePresenter.FilePicker, BasePresen
                 Repository.MutableDirectory repo = getCurrentDirectoryContents();
 
                 if (repo != null) {
+                    Logger.message(this, "Updated directory contents! Entities: " + repo.getContents().size());
                     updateDirectoryContents(repo);
                     updateDelegateDirectoryContents(repo);
                 } else {
