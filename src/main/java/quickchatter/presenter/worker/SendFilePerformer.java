@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import filesystem.fundamentals.FilePath;
 import filesystem.simple.SimpleFileSystem;
+import java.util.regex.Pattern;
 import network.basic.TransmissionMessage;
 import network.basic.TransmissionType;
 import network.basic.Transmitter;
@@ -37,6 +38,8 @@ public class SendFilePerformer implements TransmitterListener {
     public static final char STATUS_CANCEL = '0';
     public static final char STATUS_ACCEPT = '1';
     public static final char STATUS_DENY = '2';
+    
+    public static final @NotNull String ASK_DESCRIPTION_NAME_SEPARATOR = "'";
 
     private @NotNull final Object lock = new Object();
 
@@ -299,10 +302,7 @@ public class SendFilePerformer implements TransmitterListener {
     }
 
     private @NotNull BCTransmissionMessage buildSendAskMessage(@NotNull FilePath path) {
-        String name = path.getLastComponent();
-        DataSize size = getSize(path);
-
-        byte[] value = stringToBytes(name + " (" + size.toString() + ")");
+        byte[] value = stringToBytes(buildSendAskDescription(path));
 
         return new BCTransmissionMessage(constants.TYPE_SEND_FILE_ASK, value);
     }
@@ -512,7 +512,7 @@ public class SendFilePerformer implements TransmitterListener {
         return BCTransmissionMessageSegment.bytesToString(data);
     }
 
-    private @NotNull DataSize getSize(@NotNull FilePath path) {
+    private @NotNull DataSize getSizeFromPath(@NotNull FilePath path) {
         String filePath = path.getPath();
 
         File file = new File(filePath);
@@ -532,14 +532,20 @@ public class SendFilePerformer implements TransmitterListener {
         return new byte[0];
     }
 
+    private @NotNull String buildSendAskDescription(@NotNull FilePath path) {
+        String name = path.getLastComponent();
+        DataSize size = getSizeFromPath(path);
+        return ASK_DESCRIPTION_NAME_SEPARATOR + name + ASK_DESCRIPTION_NAME_SEPARATOR + " (" + size.toString() + ")";
+    }
+    
     private @NotNull String getFileNameFromSentDescription(@NotNull String description) {
-        String[] components = description.split(" ");
+        String[] components = description.split(Pattern.quote(ASK_DESCRIPTION_NAME_SEPARATOR));
 
-        if (components.length <= 1) {
+        if (components.length <= 2) {
             return "transferredFile";
         }
 
-        return components[0];
+        return components[1];
     }
 }
 
