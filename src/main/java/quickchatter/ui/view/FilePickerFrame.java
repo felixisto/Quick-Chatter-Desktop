@@ -273,10 +273,21 @@ public class FilePickerFrame extends javax.swing.JFrame implements BaseView.Whol
                 if (row >= 0 && col >= 0) {
                     int index = FileSystemEntitiesTableData.indexOf(row, col, entitiesTable.getColumnCount());
                     
+                    if (index >= tableData.count()) {
+                        deselectAll();
+                        return;
+                    }
+                    
+                    int selectIndexNow = currentSelectIndex;
+                    
                     onClickItem(index);
                     
-                    if (evt.getClickCount() == 2) {
+                    int clickCount = evt.getClickCount();
+                    
+                    if (clickCount == 2) {
                         onDoubleClickItem(index);
+                    } else if (index == selectIndexNow) {
+                        deselectAll();
                     }
                 }
             }
