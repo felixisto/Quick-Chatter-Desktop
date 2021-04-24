@@ -13,10 +13,10 @@ public class BCConstants {
     private static BCConstants shared;
 
     public final TransmissionType TYPE_PING;
-    public final TransmissionType TYPE_CHAT; // value: text
-    public final TransmissionType TYPE_SEND_FILE_ASK; // value: file description
-    public final TransmissionType TYPE_SEND_FILE_STATUS; // value: 0 cancel 1 accept 2 deny
-    public final TransmissionType TYPE_SEND_FILE_DATA; // value: file data
+    public final TransmissionType TYPE_CHAT; // possible values: <text>
+    public final TransmissionType TYPE_SEND_FILE_ASK; // possible values: <file description>
+    public final TransmissionType TYPE_SEND_FILE_STATUS; // possible values: 0 (cancel) 1 (accept) 2 (deny)
+    public final TransmissionType TYPE_SEND_FILE_DATA; // possible values: <file data>
     public final TransmissionType TYPE_SEND_FILE_FINAL_CONFIRM;
 
     public static final @NotNull TimeValue DEFAULT_PING_DELAY = TimeValue.buildSeconds(1);
